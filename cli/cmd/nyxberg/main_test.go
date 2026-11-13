@@ -25,3 +25,21 @@ func TestServerURLPolicy(t *testing.T) {
 		}
 	}
 }
+
+func TestSelectedServerURL(t *testing.T) {
+	for _, tc := range []struct {
+		input, want string
+		valid       bool
+	}{
+		{"", "https://nyxberg.vercel.app", true},
+		{"  ", "https://nyxberg.vercel.app", true},
+		{"http://127.0.0.1:3000/", "http://127.0.0.1:3000", true},
+		{"https://preview.example.test/", "https://preview.example.test", true},
+		{"http://example.test", "", false},
+	} {
+		got, err := selectedServerURL(tc.input)
+		if (err == nil) != tc.valid || (tc.valid && got != tc.want) {
+			t.Errorf("selectedServerURL(%q) = %q, %v", tc.input, got, err)
+		}
+	}
+}

@@ -1,6 +1,6 @@
 [
   {
-    "AllowedOrigins": ["https://your-app.vercel.app"],
+    "AllowedOrigins": ["https://nyxberg.vercel.app"],
     "AllowedMethods": ["PUT"],
     "AllowedHeaders": ["content-type", "x-amz-checksum-sha256"],
     "ExposeHeaders": ["etag", "x-amz-checksum-sha256"],

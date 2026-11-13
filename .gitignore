@@ -12,3 +12,4 @@ npm/bin/native/
 apps/web/public/monaco/
 
 apps/web/.next-local-test-*/
+.vercel

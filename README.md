@@ -35,7 +35,7 @@ go build -buildvcs=false -o nyxberg ./cmd/nyxberg
 ./nyxberg
 ```
 
-Di dalam repository lokal, pilih **Smart Sync / push / pull → Configure connection** dan masukkan URL aplikasi, ID repository (ada di halaman detail), serta alias branch. Set `NYXBERG_TOKEN` pada shell untuk push atau untuk membaca repo privat. Push memindahkan Git objects, bukan snapshot ZIP; server memvalidasi object ID, checksum, DAG, fast-forward, dan melakukan compare-and-swap pada branch. Push yang terputus dapat dilanjutkan dengan menjalankan push kembali selama transfer masih berlaku. Clone publik dapat dilakukan tanpa token melalui menu awal.
+Di dalam repository lokal, pilih **Smart Sync / push / pull → Configure connection** dan tekan Enter untuk memakai `https://nyxberg.vercel.app` (atau masukkan URL aplikasi lain), lalu masukkan ID repository (ada di halaman detail), serta alias branch. Set `NYXBERG_TOKEN` pada shell untuk push atau untuk membaca repo privat. Push memindahkan Git objects, bukan snapshot ZIP; server memvalidasi object ID, checksum, DAG, fast-forward, dan melakukan compare-and-swap pada branch. Push yang terputus dapat dilanjutkan dengan menjalankan push kembali selama transfer masih berlaku. Clone publik dapat dilakukan tanpa token melalui menu awal.
 
 Untuk membuat paket platform dan menjalankan launcher npm lokal:
 

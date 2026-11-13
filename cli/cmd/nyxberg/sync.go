@@ -41,6 +41,8 @@ type snapshot struct {
 	Objects    []objectInfo `json:"objects"`
 }
 
+const defaultServerURL = "https://nyxberg.vercel.app"
+
 var oidRE = regexp.MustCompile(`^[a-f0-9]{40}$`)
 var uuidRE = regexp.MustCompile(`^[a-fA-F0-9-]{36}$`)
 var httpClient = &http.Client{Timeout: 60 * time.Second, CheckRedirect: func(req *http.Request, via []*http.Request) error { return errors.New("redirect rejected") }}
@@ -55,6 +57,16 @@ func apiURL(raw string) (string, error) {
 	}
 	return u.String(), nil
 }
+
+// selectedServerURL keeps custom and local deployments available while giving
+// new connections the public NyxBerg address as their default.
+func selectedServerURL(raw string) (string, error) {
+	if strings.TrimSpace(raw) == "" {
+		raw = defaultServerURL
+	}
+	return apiURL(strings.TrimSpace(raw))
+}
+
 func (r remote) call(method, path string, body any, out any) error {
 	var b io.Reader
 	if body != nil {
@@ -102,8 +114,8 @@ func loadRemote() (remote, error) {
 	return remote{base, id, ref, os.Getenv("NYXBERG_TOKEN")}, nil
 }
 func configure() {
-	raw := prompt("Server URL (https://...) ")
-	base, err := apiURL(raw)
+	raw := prompt("Server URL (blank = " + defaultServerURL + ")")
+	base, err := selectedServerURL(raw)
 	if err != nil {
 		fmt.Println(" ", err)
 		return
@@ -529,7 +541,7 @@ func (r remote) pull() error {
 	return nil
 }
 func cloneRepo() {
-	base, err := apiURL(prompt("Server URL (https://...)"))
+	base, err := selectedServerURL(prompt("Server URL (blank = " + defaultServerURL + ")"))
 	if err != nil {
 		fmt.Println(" ", err)
 		return
