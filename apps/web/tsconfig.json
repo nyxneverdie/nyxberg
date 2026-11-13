@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "strict": true,
+    "noEmit": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "incremental": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    ".next-local-test-dc4fe792a6d9/types/**/*.ts",
+    ".next-local-test-dc4fe792a6d9/dev/types/**/*.ts",
+    ".next-local-test-3b0f07506f25/types/**/*.ts",
+    ".next-local-test-3b0f07506f25/dev/types/**/*.ts",
+    ".next-local-test-4ef32e841286/types/**/*.ts",
+    ".next-local-test-4ef32e841286/dev/types/**/*.ts",
+    ".next-local-test-b51cde76902f/types/**/*.ts",
+    ".next-local-test-b51cde76902f/dev/types/**/*.ts",
+    ".next-local-test-00a1c9f4f698/types/**/*.ts",
+    ".next-local-test-00a1c9f4f698/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

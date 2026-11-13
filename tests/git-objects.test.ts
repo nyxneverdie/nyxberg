@@ -1,0 +1,8 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { deflateSync } from 'node:zlib';
+import { decodeObject, validateGraph } from '../apps/web/lib/git-objects';
+function object(type:string,content:Buffer|string){const body=Buffer.isBuffer(content)?content:Buffer.from(content);const raw=Buffer.concat([Buffer.from(`${type} ${body.length}\0`),body]);const oid=createHash('sha1').update(raw).digest('hex');const compressed=deflateSync(raw);const sha=createHash('sha256').update(compressed).digest('hex');return {oid,compressed,sha,decoded:decodeObject(oid,compressed,sha)}}
+test('verified graph requires all objects and accepts only fast-forward history',()=>{const blob=object('blob','hello\n');const tree=object('tree',Buffer.concat([Buffer.from('100644 readme\0'),Buffer.from(blob.oid,'hex')]));const first=object('commit',`tree ${tree.oid}\nauthor Test <t@example.test> 0 +0000\ncommitter Test <t@example.test> 0 +0000\n\nfirst\n`);const next=object('commit',`tree ${tree.oid}\nparent ${first.oid}\nauthor Test <t@example.test> 0 +0000\ncommitter Test <t@example.test> 0 +0000\n\nsecond\n`);const objects=new Map([blob,tree,first,next].map(o=>[o.oid,o.decoded]));assert.doesNotThrow(()=>validateGraph(objects,next.oid,first.oid));assert.throws(()=>validateGraph(objects,first.oid,next.oid),/NON_FAST_FORWARD/);objects.delete(blob.oid);assert.throws(()=>validateGraph(objects,next.oid,null),/Missing/)});
+test('tampered storage and malformed objects cannot be verified',()=>{const blob=object('blob','safe');assert.throws(()=>decodeObject(blob.oid,blob.compressed,'0'.repeat(64)),/checksum/);assert.throws(()=>decodeObject('0'.repeat(40),blob.compressed,blob.sha),/object ID/)});

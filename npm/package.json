@@ -1,0 +1,23 @@
+{
+  "name": "nyxberg",
+  "version": "1.0.0-beta.1",
+  "description": "NyxBerg CLI launcher",
+  "bin": {
+    "nyxberg": "bin/nyxberg.js"
+  },
+  "os": [
+    "linux",
+    "darwin",
+    "win32"
+  ],
+  "optionalDependencies": {
+    "@nyxberg/cli-linux-x64": "1.0.0-beta.1",
+    "@nyxberg/cli-linux-arm64": "1.0.0-beta.1",
+    "@nyxberg/cli-darwin-x64": "1.0.0-beta.1",
+    "@nyxberg/cli-darwin-arm64": "1.0.0-beta.1",
+    "@nyxberg/cli-win32-x64": "1.0.0-beta.1"
+  },
+  "files": [
+    "bin"
+  ]
+}

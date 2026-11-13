@@ -1,0 +1,7 @@
+import { databaseConfigured, query } from './db';
+export type Repo = { id:string; slug:string; name:string; description:string; language:string; license:string; visibility:string; pinned:boolean; username:string; updated_at:string };
+export async function listRepos(q = '', language = ''): Promise<Repo[]> { if (!databaseConfigured()) return []; return query<Repo>(`SELECT r.id,r.slug,r.name,r.description,r.language,r.license,r.visibility,r.pinned,u.username,r.updated_at FROM repositories r JOIN users u ON u.id=r.owner_id WHERE r.visibility='PUBLIC' AND r.deleted_at IS NULL AND (r.name ILIKE $1 OR r.description ILIKE $1 OR r.slug ILIKE $1) AND ($2='' OR lower(r.language)=lower($2)) ORDER BY r.pinned DESC,r.updated_at DESC LIMIT 100`, [`%${q}%`,language]); }
+export async function getRepo(owner:string, slug:string, adminId?:string):Promise<Repo|null> { if (!databaseConfigured()) return null; const rows = await query<Repo>(`SELECT r.id,r.slug,r.name,r.description,r.language,r.license,r.visibility,r.pinned,u.username,r.updated_at FROM repositories r JOIN users u ON u.id=r.owner_id WHERE u.username=$1 AND r.slug=$2 AND r.deleted_at IS NULL AND (r.visibility='PUBLIC' OR r.owner_id=$3)`,[owner,slug,adminId || null]); return rows[0] || null; }
+export function branchRef(displayName:string) { return 'refs/heads/nyxb/' + Buffer.from(displayName, 'utf8').toString('base64url'); }
+
+export { databaseConfigured } from "./db";

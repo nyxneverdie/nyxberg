@@ -1,0 +1,4 @@
+import Link from 'next/link';
+import { ArrowUpRight, BookOpen, LockKeyhole } from 'lucide-react';
+import type { Repo } from '../lib/repos';
+export default function RepoCard({repo}:{repo:Repo}) { return <Link className="repo-card" href={`/repo/${encodeURIComponent(repo.username)}/${encodeURIComponent(repo.slug)}`}><div className="repo-card-top"><span className="repo-icon"><BookOpen size={18}/></span><ArrowUpRight className="repo-arrow" size={17}/></div><div className="repo-owner">{repo.username} <span>/</span> repository</div><h3>{repo.name}</h3><p>{repo.description || 'No description yet.'}</p><div className="repo-card-bottom"><span><i className="language-dot"/>{repo.language || 'Unspecified'}</span><span>{repo.license || 'License not specified'}</span>{repo.visibility === 'PRIVATE' && <LockKeyhole size={14}/>}</div></Link> }

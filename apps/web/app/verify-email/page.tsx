@@ -1,0 +1,2 @@
+import AccountForm from '../../components/account-form';
+export default async function Page({searchParams}:{searchParams:Promise<{token?:string}>}){const {token}=await searchParams;return <div className="wrap content-page"><div className="kicker">ONE MORE STEP</div><h1>Verify your email.</h1><div className="panel">{token?<AccountForm mode="verify-email" token={token}/>:<p>Open the verification link from your email.</p>}</div></div>}

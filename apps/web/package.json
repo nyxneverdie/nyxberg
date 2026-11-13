@@ -1,0 +1,42 @@
+{
+  "name": "@nyxberg/web",
+  "private": true,
+  "version": "1.0.0-beta.1",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "predev": "node ../../scripts/copy-monaco.mjs",
+    "prebuild": "node ../../scripts/copy-monaco.mjs"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1167.0",
+    "@aws-sdk/s3-request-presigner": "^3.1167.0",
+    "@monaco-editor/loader": "^1.7.0",
+    "@xyflow/react": "^12.12.1",
+    "diff": "^9.0.0",
+    "fflate": "^0.8.3",
+    "lucide-react": "0.545.0",
+    "monaco-editor": "0.53.0",
+    "next": "16.4.6",
+    "nodemailer": "^10.5.0",
+    "pg": "8.16.3",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "shiki": "^4.6.0",
+    "tar-stream": "^3.2.2",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.30",
+    "@types/nodemailer": "^8.0.2",
+    "@types/pg": "8.15.5",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@types/tar-stream": "^3.1.5",
+    "tsx": "^4.23.15",
+    "typescript": "5.9.3"
+  }
+}

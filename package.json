@@ -1,0 +1,29 @@
+{
+  "name": "nyxberg-workspace",
+  "private": true,
+  "version": "1.0.0-beta.1",
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @nyxberg/web",
+    "build": "npm run build --workspace @nyxberg/web",
+    "start": "npm run start --workspace @nyxberg/web",
+    "test": "node --test tests/*.test.mjs && tsx --test tests/*.test.ts",
+    "build:cli": "node scripts/build-cli.mjs",
+    "test:local": "node scripts/test-local.mjs"
+  },
+  "engines": {
+    "node": ">=20.9"
+  },
+  "overrides": {
+    "monaco-editor": "0.53.0"
+  },
+  "devDependencies": {
+    "mailparser": "3.14.3",
+    "smtp-server": "3.21.4"
+  },
+  "dependencies": {
+    "go": "^3.0.1"
+  }
+}

@@ -1,0 +1,9 @@
+import {zipSync,type Zippable} from 'fflate';
+import {gzipSync} from 'node:zlib';
+import * as tar from 'tar-stream';
+import {openSnapshot} from './browse';
+import {safePath} from './proposals';
+export async function buildArchive(repoId:string,ref:string,commit:string,format:'zip'|'tar.gz') {const snapshot=await openSnapshot(repoId,ref);if(!snapshot)throw new Error('Empty repository');const root=await snapshot.commit(commit);const files:{name:string;data:Buffer;mode:number}[]=[];let total=0;async function walk(oid:string,prefix:string,depth:number){if(depth>32)throw new Error('Path depth exceeds limit');for(const e of await snapshot!.tree(oid)){const name=prefix?`${prefix}/${e.name}`:e.name;if(!safePath(name))throw new Error('Unsafe path');if(e.type==='tree')await walk(e.oid,name,depth+1);else if(e.type==='submodule'||e.mode==='120000')throw new Error('Archives with symlinks or submodules are not supported');else{const obj=await snapshot!.object(e.oid);if(obj.type!=='blob')throw new Error('Invalid blob');total+=obj.content.length;if(total>32*1024*1024||files.length>=256)throw new Error('Archive exceeds limit');files.push({name,data:obj.content,mode:e.mode==='100755'?0o755:0o644})}}}await walk(root.tree,'',0);
+ if(format==='zip'){const entries:Zippable=Object.create(null);for(const f of files)entries[f.name]=[f.data,{os:3,attrs:(0o100000|f.mode)<<16}];return Buffer.from(zipSync(entries,{level:6}))}
+ const pack=tar.pack();const chunks:Buffer[]=[];const done=new Promise<Buffer>((resolve,reject)=>{pack.on('data',(chunk:unknown)=>{chunks.push(Buffer.from(chunk as Uint8Array))});pack.on('end',()=>resolve(Buffer.concat(chunks)));pack.on('error',reject)});for(const f of files)await new Promise<void>((resolve,reject)=>pack.entry({name:f.name,mode:f.mode,mtime:new Date(0)},f.data,e=>e?reject(e):resolve()));pack.finalize();return gzipSync(await done);
+}

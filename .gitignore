@@ -1,0 +1,14 @@
+node_modules
+.next
+.env
+.env.local
+*.log
+cli/nyxberg
+
+npm/platforms/
+npm/bin/native/
+*.tsbuildinfo
+
+apps/web/public/monaco/
+
+apps/web/.next-local-test-*/

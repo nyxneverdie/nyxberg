@@ -1,0 +1,4 @@
+import {createHash} from 'node:crypto';
+import {query} from './db';
+export async function allowRequest(bucket:string,key:string,limit:number,minutes=15){const hash=createHash('sha256').update(`${process.env.RATE_LIMIT_SALT||'nyxberg'}:${bucket}:${key}`).digest('hex');const [row]=await query<{attempts:number}>(`INSERT INTO rate_limits(key_hash,attempts,window_started_at) VALUES($1,1,now()) ON CONFLICT(key_hash) DO UPDATE SET attempts=CASE WHEN rate_limits.window_started_at < now()-($2::int * interval '1 minute') THEN 1 ELSE rate_limits.attempts+1 END,window_started_at=CASE WHEN rate_limits.window_started_at < now()-($2::int * interval '1 minute') THEN now() ELSE rate_limits.window_started_at END RETURNING attempts`,[hash,minutes]);return row.attempts<=limit}
+export function requestAddress(req:Request){return (req.headers.get('x-vercel-forwarded-for')||req.headers.get('x-forwarded-for')||'unknown').split(',')[0].trim().slice(0,80)}

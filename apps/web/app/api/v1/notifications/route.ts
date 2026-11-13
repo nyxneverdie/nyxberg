@@ -1,0 +1,6 @@
+import {NextRequest,NextResponse} from 'next/server';
+import {z} from 'zod';
+import {actor,writeAllowed} from '../../../../lib/auth';
+import {query} from '../../../../lib/db';
+export async function GET(){const user=await actor('contribute:read');if(!user)return NextResponse.json({error:{code:'AUTH_REQUIRED',message:'Sign in required'}},{status:401});const data=await query('SELECT id,message,resource_id,read_at,created_at FROM notifications WHERE recipient_id=$1 ORDER BY created_at DESC LIMIT 100',[user.id]);return NextResponse.json({data},{headers:{'Cache-Control':'private, no-store'}})}
+export async function PATCH(req:NextRequest){if(!await writeAllowed('contribute:read'))return NextResponse.json({error:{code:'FORBIDDEN',message:'Invalid origin'}},{status:403});const user=await actor('contribute:read');if(!user)return NextResponse.json({error:{code:'AUTH_REQUIRED',message:'Sign in required'}},{status:401});const d=z.object({id:z.string().uuid()}).safeParse(await req.json());if(!d.success)return NextResponse.json({error:{code:'INVALID_INPUT',message:'Invalid notification'}},{status:400});await query('UPDATE notifications SET read_at=COALESCE(read_at,now()) WHERE id=$1 AND recipient_id=$2',[d.data.id,user.id]);return NextResponse.json({ok:true})}

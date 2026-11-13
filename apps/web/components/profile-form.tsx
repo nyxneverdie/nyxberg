@@ -1,0 +1,3 @@
+'use client';
+import {useState} from 'react';
+export default function ProfileForm({bio}:{bio:string}){const [message,setMessage]=useState('');async function submit(e:React.FormEvent<HTMLFormElement>){e.preventDefault();const data=new FormData(e.currentTarget);const res=await fetch('/api/v1/profile',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({bio:data.get('bio')})});setMessage(res.ok?'Profile updated.':'Could not update profile.')}return <form className="form" onSubmit={submit}><label>Bio<textarea name="bio" defaultValue={bio} maxLength={500}/></label><button className="button primary">Save profile</button>{message&&<p role="status">{message}</p>}</form>}
